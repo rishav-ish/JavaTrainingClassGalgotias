@@ -23,6 +23,9 @@ public class PolyAnimal{
 			d.setColor("white");
 			
 			System.out.println(d.getColor());
+			d.doFace();
+			d.doSound();
+			d.eat();
 			
 		}catch(Exception ex){
 			System.out.println("OOps there is some sort of exception... ");
@@ -51,7 +54,7 @@ class Animal{
 	}
 }
 
-class Dog extends Animal{
+class Dog extends Animal implements Pet{
 	private String color;
 	
 	private String name;
@@ -68,4 +71,26 @@ class Dog extends Animal{
 		return this.color;
 	}
 	
+	public void doFace(){
+		System.out.println(":-)");
+		System.out.println(":-(");
+		System.out.println(":-0");
+	}
+	
+	public void doSound(){
+		System.out.println("Bhaw bhaw...bhaw!!");
+	}
+	
+	public void eat(){
+		System.out.println("Yumm yumm...!!");
+	}
+}
+
+//let make dog pet animal...
+//interface is 100% pure abstract class that can be use for multi-inheritance in java
+
+interface Pet{
+	public void doFace();
+	public void doSound();
+	public void eat();
 }
