@@ -1,7 +1,16 @@
+/*
+	Customer class
+	programmed by Rishav
+*/
+
+
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 public class Customer{
+	
+	Scanner input = new Scanner(System.in);
 
 	ArrayList<String> mob = new ArrayList<String>();
 	
@@ -76,8 +85,7 @@ public class Customer{
 			
 			bw.close();
 			
-			
-			
+				
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -90,16 +98,15 @@ public class Customer{
 		
 		new clear().go();
 		
-		
-		
-		Scanner input = new Scanner(System.in);
+		// Scanner input = new Scanner(System.in);
 		
 		System.out.println("\nWelcome " + n);
 		
 		System.out.println("\nChoose from the following");
 		System.out.println("\n1.Choose Channels");
 		System.out.println("2.Show subscribe channels");
-		System.out.println("3.exit");
+		System.out.println("3.Remove subscribe channels");
+		System.out.println("4.exit");
 		System.out.print("\nYour choice ");
 		
 		int choice = input.nextInt();
@@ -116,6 +123,10 @@ public class Customer{
 				break;
 				
 			case 3:
+				removeSubscription();
+				break;
+				
+			case 4:
 				System.exit(0);
 				
 			default:
@@ -123,7 +134,7 @@ public class Customer{
 		}
 		
 		
-		System.out.println("\n\nPlease press enter retry");
+		System.out.println("\n\nPlease press enter...");
 		
 		System.in.read();
 
@@ -132,15 +143,23 @@ public class Customer{
 		
 	}
 	
+
+	
 	public void getSubscription() throws Exception{
 		
 		Channel ch = new Channel();
-		Scanner input = new Scanner(System.in);
+		// Scanner input = new Scanner(System.in);
+		
+		int max = ch.getSize();
 		
 		
-		
-		System.out.println("\nPlease enter the number of channels you want to choose");
+		System.out.println("\nPlease enter the number of channels you want to choose from " + max + " channels.");
 		int size = input.nextInt();
+		
+		if(size > max || size < 1){
+			System.out.println("Please choose between 1 and " + max + " inclusive.");
+			return;
+		}
 		
 		ch.catalogue();
 		
@@ -155,7 +174,7 @@ public class Customer{
 		// Channel ch = new Channel();
 		
 		System.out.println("\nHere is your total balance that you need to pay " + ch.getTotalBalance(subscribe));
-		System.out.println("your subscribe to " + size + " channels.");
+		System.out.println("you're now  subscribed to " + subscribe.size() + " channels.");
 		
 		String file = m + ".txt";
 		
@@ -181,7 +200,7 @@ public class Customer{
 	
 	public void showSubscription() throws Exception{
 		new clear().go();
-		System.out.println("you are currenlyt subscribe to following channels");
+		System.out.println("you are currently subscribe to following channels");
 		
 		String temp = m + ".txt";
 		
@@ -194,6 +213,8 @@ public class Customer{
 			while((line=br.readLine())!=null){
 				subscribe.add(Integer.parseInt(line));
 			}
+			
+			br.close();
 			
 			Channel ch = new Channel();
 			
@@ -209,6 +230,64 @@ public class Customer{
 		}
 	}
 	
+	public void removeSubscription() throws Exception{
+		
+		if(subscribe.isEmpty()){
+			System.out.println("It's look like you are not subscribe to any channel.");
+			return;
+		}
+		
+		showSubscription();
+		
+		int max = subscribe.size();
+		
+		System.out.println("\nPlease enter the number of channel you want to remove");
+		int size = input.nextInt();
+		
+		if(size < 1 || size > max){
+			System.out.println("Please enter the number between 1 and " + max + " inclusive.");
+			return;
+		}
+		
+		System.out.println("Enter the " + size + " channels hash code on extreme right");
+		
+		for(int i = 0 ;i<size;++i){
+			int temp = input.nextInt();
+			subscribe.remove(temp);
+		}
+		
+		// System.out.println("Successfully Deleted");
+		
+		String file = m + ".txt";
+		
+		
+		File file1 = new File(file);
+		
+		if(file1.delete()){
+			System.out.println("\nSuccessfully deleted");
+			file1.createNewFile();
+		}
+		
+		
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file1,true));
+		
+		Iterator it = subscribe.iterator();
+		
+		/* for(int i = 0;i<size;++i){
+			bw.write(Integer.toString(temp[i]));
+			bw.newLine();
+		} */
+		
+		while(it.hasNext()){
+			int temp = (int) it.next();
+			bw.write( Integer.toString(temp));
+			bw.newLine();
+		}
+		
+		bw.close();
+		
+	}
+	
 	public boolean login(String mob,String password){
 		if(this.mob.contains(mob)){
 			
@@ -219,6 +298,31 @@ public class Customer{
 			if(password.equals(this.password.get(index))){
 				m = mob;
 				n = this.name.get(index);
+				
+				
+				//loading subscription done by users...
+				
+				String temp = m + ".txt";
+				
+				
+				
+				try{
+					
+					BufferedReader br = new BufferedReader(new FileReader(temp));
+			
+					String line;
+			
+					while((line=br.readLine())!=null){
+							subscribe.add(Integer.parseInt(line));
+					}
+					
+					br.close();
+				}catch(FileNotFoundException fex){
+					
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+				
 				
 				return true;
 			}else{

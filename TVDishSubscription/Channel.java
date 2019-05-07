@@ -1,3 +1,15 @@
+/*
+	Remember while initializing the catalog file
+	make sure that you write channel name and price 
+	with comma in between and no spaces between comma
+	other wise code will break
+	
+	e.g :- Indore tv,20
+	
+	@Rishav
+*/
+
+
 import java.io.*;
 import java.util.*;
 
@@ -58,10 +70,12 @@ public class Channel{
 		Iterator it =  hs.iterator();
 		int index = 1;
 		
+		System.out.printf("\n%-6s %-80s %20s %20s\n","index","Channel Name","Price","Hash");
+		
 		while(it.hasNext()){
 			int temp = (Integer) it.next();
 			
-			System.out.printf("\n%-6d %-80s %20d",index,ch.get(temp),price.get(temp),++index);
+			System.out.printf("\n%-6d %-80s %20d %20d",index,ch.get(temp),price.get(temp),temp,++index);
 		}
 	}
 	
@@ -80,5 +94,9 @@ public class Channel{
 		}
 			
 		return sum;
+	}
+	
+	public int getSize(){
+		return ch.size();
 	}
 }	 
